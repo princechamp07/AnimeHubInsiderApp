@@ -15,7 +15,7 @@ export default function AuthRoutesLayout() {
         return (
             <View className="flex-1 relative bg-black">
                 <Image
-                    source={require('@/assets/images/adaptive-icon.png')}
+                    source={require('@/assets/images/AnimeBackground.png')}
                     style={{
                         position: 'absolute',
                         width: '100%',

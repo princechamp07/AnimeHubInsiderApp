@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.princechamp07.AnimeHubInsider"
     },
     "web": {
       "bundler": "metro",
@@ -45,6 +46,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b8b80833-6fa8-4611-92f8-16266e39e128"
+      }
     }
   }
 }
