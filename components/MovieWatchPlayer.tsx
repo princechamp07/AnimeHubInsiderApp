@@ -14,6 +14,8 @@ const MovieWatchPlayer = ({ movieId, ImdbId, activeServer }: Props) => {
     const webviewRef = useRef(null);
     const [useFallback, setUseFallback] = useState(false);
 
+    console.log(movieId, ImdbId)
+
     const getEmbedUrl = (): string => {
         if (activeServer === 'vidsrc-cc') {
             return `https://vidsrc.cc/v2/embed/movie/${useFallback ? ImdbId : movieId}?autoPlay=true`;
