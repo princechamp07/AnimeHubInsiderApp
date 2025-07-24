@@ -1,2 +1,2 @@
-export const TMDB_API_KEY = "6e4273bb1758846bef23509e2657d603"
+export const TMDB_API_KEY = process.env
 
