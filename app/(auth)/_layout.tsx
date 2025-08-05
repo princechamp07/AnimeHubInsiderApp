@@ -36,7 +36,7 @@ export default function AuthRoutesLayout() {
     }
 
     // ✅ Only redirect once Clerk is fully ready
-    if (isSignedIn) {
+    if (!isSignedIn) {
         return <Redirect href="/" />;
     }
 

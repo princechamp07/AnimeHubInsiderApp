@@ -1449,3 +1449,281 @@ export async function fetchAllMovies(page: number = 1): Promise<{ results: IAnim
     return { results: [], totalPages: 1 };
   }
 }
+
+
+export type SpotlightAnime = {
+	_id: string;
+	title: string;
+	cover: string;
+	storyLine: string;
+	genre: string[];
+};
+
+export async function fetchSpotlightAnime(): Promise<SpotlightAnime[]> {
+	try {
+		const postsRes = await axios.get(
+			'https://toonhub4u.me/wp-json/wp/v2/posts?categories=46&per_page=10&_embed'
+		);
+		const posts = postsRes.data;
+
+		const formatted: SpotlightAnime[] = posts.map((post: any) => {
+			const cover =
+				post.uagb_featured_image_src?.['large']?.[0] ||
+				post.rttpg_featured_image_url?.['large']?.[0] ||
+				post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+				post.jetpack_featured_media_url ||
+				'https://placehold.co/600x300?text=No+Image';
+
+			const genres = post.rttpg_category
+				? Array.from(post.rttpg_category.matchAll(/>(.*?)<\/a>/g)).map((m) => m[1])
+				: [];
+
+			return {
+				_id: post.id.toString(),
+				title: post.title.rendered,
+				cover,
+				storyLine: '',
+				genre: genres,
+			};
+		});
+
+		return formatted;
+	} catch (error) {
+		console.error('❌ Error fetching spotlight:', error);
+		return [];
+	}
+}
+
+// api.ts
+
+
+export type ActionAdventureAnime = {
+	_id: string;
+	title: string;
+	cover: string;
+	storyLine: string;
+	genre: string[];
+};
+
+export async function fetchActionAdventure(): Promise<ActionAdventureAnime[]> {
+	try {
+		const postsRes = await axios.get(
+			'https://toonhub4u.me/wp-json/wp/v2/posts?categories=47&per_page=10&_embed'
+		);
+		const posts = postsRes.data;
+
+		const formatted: ActionAdventureAnime[] = posts.map((post: any) => {
+			const cover =
+				post.uagb_featured_image_src?.['large']?.[0] ||
+				post.rttpg_featured_image_url?.['large']?.[0] ||
+				post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+				post.jetpack_featured_media_url ||
+				'https://placehold.co/600x300?text=No+Image';
+
+			const genres = post.rttpg_category
+				? Array.from(post.rttpg_category.matchAll(/>(.*?)<\/a>/g)).map((m) => m[1])
+				: [];
+
+			return {
+				_id: post.id.toString(),
+				title: post.title.rendered,
+				cover,
+				storyLine: '',
+				genre: genres,
+			};
+		});
+
+		return formatted;
+	} catch (error) {
+		console.error('❌ Error fetching spotlight:', error);
+		return [];
+	}
+}
+
+
+
+export async function fetchAmazonPrime(): Promise<ActionAdventureAnime[]> {
+	try {
+		const postsRes = await axios.get(
+			'https://toonhub4u.me/wp-json/wp/v2/posts?categories=40655&per_page=10&_embed'
+		);
+		const posts = postsRes.data;
+
+		const formatted: ActionAdventureAnime[] = posts.map((post: any) => {
+			const cover =
+				post.uagb_featured_image_src?.['large']?.[0] ||
+				post.rttpg_featured_image_url?.['large']?.[0] ||
+				post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+				post.jetpack_featured_media_url ||
+				'https://placehold.co/600x300?text=No+Image';
+
+			const genres = post.rttpg_category
+				? Array.from(post.rttpg_category.matchAll(/>(.*?)<\/a>/g)).map((m) => m[1])
+				: [];
+
+			return {
+				_id: post.id.toString(),
+				title: post.title.rendered,
+				cover,
+				storyLine: '',
+				genre: genres,
+			};
+		});
+
+		return formatted;
+	} catch (error) {
+		console.error('❌ Error fetching spotlight:', error);
+		return [];
+	}
+}
+
+export async function fetchCartoonShows(): Promise<ActionAdventureAnime[]> {
+	try {
+		const postsRes = await axios.get(
+			'https://toonhub4u.me/wp-json/wp/v2/posts?categories=39050&per_page=10&_embed'
+		);
+		const posts = postsRes.data;
+
+		const formatted: ActionAdventureAnime[] = posts.map((post: any) => {
+			const cover =
+				post.uagb_featured_image_src?.['large']?.[0] ||
+				post.rttpg_featured_image_url?.['large']?.[0] ||
+				post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+				post.jetpack_featured_media_url ||
+				'https://placehold.co/600x300?text=No+Image';
+
+			const genres = post.rttpg_category
+				? Array.from(post.rttpg_category.matchAll(/>(.*?)<\/a>/g)).map((m) => m[1])
+				: [];
+
+			return {
+				_id: post.id.toString(),
+				title: post.title.rendered,
+				cover,
+				storyLine: '',
+				genre: genres,
+			};
+		});
+
+		return formatted;
+	} catch (error) {
+		console.error('❌ Error fetching spotlight:', error);
+		return [];
+	}
+}
+
+export async function fetchCrunchyRoll(): Promise<ActionAdventureAnime[]> {
+	try {
+		const postsRes = await axios.get(
+			'https://toonhub4u.me/wp-json/wp/v2/posts?categories=40&per_page=10&_embed'
+		);
+		const posts = postsRes.data;
+
+		const formatted: ActionAdventureAnime[] = posts.map((post: any) => {
+			const cover =
+				post.uagb_featured_image_src?.['large']?.[0] ||
+				post.rttpg_featured_image_url?.['large']?.[0] ||
+				post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+				post.jetpack_featured_media_url ||
+				'https://placehold.co/600x300?text=No+Image';
+
+			const genres = post.rttpg_category
+				? Array.from(post.rttpg_category.matchAll(/>(.*?)<\/a>/g)).map((m) => m[1])
+				: [];
+
+			return {
+				_id: post.id.toString(),
+				title: post.title.rendered,
+				cover,
+				storyLine: '',
+				genre: genres,
+			};
+		});
+
+		return formatted;
+	} catch (error) {
+		console.error('❌ Error fetching spotlight:', error);
+		return [];
+	}
+}
+
+export async function fetchAllAnimes(): Promise<ActionAdventureAnime[]> {
+	try {
+		const postsRes = await axios.get(
+			'https://toonhub4u.me/wp-json/wp/v2/posts?per_page=10&_embed'
+
+		);
+		const posts = postsRes.data;
+
+		const formatted: ActionAdventureAnime[] = posts.map((post: any) => {
+			const cover =
+				post.uagb_featured_image_src?.['large']?.[0] ||
+				post.rttpg_featured_image_url?.['large']?.[0] ||
+				post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+				post.jetpack_featured_media_url ||
+				'https://placehold.co/600x300?text=No+Image';
+
+			const genres = post.rttpg_category
+				? Array.from(post.rttpg_category.matchAll(/>(.*?)<\/a>/g)).map((m) => m[1])
+				: [];
+
+			return {
+				_id: post.id.toString(),
+				title: post.title.rendered,
+				cover,
+				storyLine: '',
+				genre: genres,
+			};
+		});
+
+		return formatted;
+	} catch (error) {
+		console.error('❌ Error fetching spotlight:', error);
+		return [];
+	}
+}
+
+export async function searchAnimes(query: string): Promise<ActionAdventureAnime[]> {
+	try {
+		const postsRes = await axios.get(
+			'https://toonhub4u.me/wp-json/wp/v2/posts',
+			{
+				params: {
+					search: query,
+					per_page: 10,
+					_embed: true,
+					orderby: 'relevance',
+					order: 'desc',
+				},
+			}
+		);
+
+		const posts = postsRes.data;
+
+		const formatted: ActionAdventureAnime[] = posts.map((post: any) => {
+			const cover =
+				post.uagb_featured_image_src?.['large']?.[0] ||
+				post.rttpg_featured_image_url?.['large']?.[0] ||
+				post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+				post.jetpack_featured_media_url ||
+				'https://placehold.co/600x300?text=No+Image';
+
+			const genres = post.rttpg_category
+				? Array.from(post.rttpg_category.matchAll(/>(.*?)<\/a>/g)).map((m) => m[1])
+				: [];
+
+			return {
+				_id: post.id.toString(),
+				title: post.title.rendered,
+				cover,
+				storyLine: '',
+				genre: genres,
+			};
+		});
+
+		return formatted;
+	} catch (error) {
+		console.error('❌ Error searching animes:', error);
+		return [];
+	}
+}

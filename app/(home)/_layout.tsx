@@ -25,7 +25,7 @@ export default function RootLayout() {
         );
     }
 
-    if (!isSignedIn) {
+    if (isSignedIn) {
         return <Redirect href="/(auth)/sign-in" />;
     }
 

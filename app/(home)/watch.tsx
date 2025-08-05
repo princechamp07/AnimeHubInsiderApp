@@ -1,6 +1,9 @@
-import { fetchEpisodesFromAniList, fetchRelatedSeasons } from '@/api';
+import { fetchEpisodesFromAniList } from '@/api';
+import { extractDataId } from '@/utils/extractDataId'; // adjust path if needed
+
 import RelatedSeasons from '@/components/RelatedSeasons';
 import WatchPlayer from '@/components/WatchPlayer';
+import { getTotalEpisodes } from '@/utils/getTotalEpisodes';
 import { useLocalSearchParams } from 'expo-router';
 import { ChevronDown } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
@@ -90,23 +93,69 @@ export default function WatchAnime() {
 	const [selectedRange, setSelectedRange] = useState<string>('');
 	const [relatedSeasons, setRelatedSeasons] = useState<RelatedSeason[]>([]);
 
+	const [selectedServer, setSelectedServer] = useState<string>('jp');
+	const [seasonId, setSeasonId] = useState<string | null>(null);
+
+
 	useEffect(() => {
-		if (animeId) {
-			fetchEpisodesFromAniList(Number(animeId)).then((data) => {
-				setEpisodes(data.episodes);
-				setNextAiring(data.nextAiringEpisode || null);
+		const fetchInitialData = async () => {
+			if (!slugId) return;
 
-				const lastAvailableEpisode = data.nextAiringEpisode
-					? data.nextAiringEpisode.episode - 1
-					: data.episodes[data.episodes.length - 1]?.episode || 1;
+			try {
+				const satoruSeasonId = await extractDataId(slugId);
+				if (satoruSeasonId) {
+					setSeasonId(satoruSeasonId);
+					console.log('🎯 Satoru season ID:', satoruSeasonId);
+				} else {
+					console.warn('❌ No Satoru data-id found');
+				}
+			} catch (error) {
+				console.error('Failed to extract data-id:', error);
+			}
+		};
 
-				setSelectedEpisode(lastAvailableEpisode);
-				generateRangeOptions(data.episodes);
-			});
+		fetchInitialData();
+	}, [slugId]);
 
-			fetchRelatedSeasons(Number(animeId)).then(setRelatedSeasons);
+
+	const fetchEpisodeList = async (server: string) => {
+		if (!animeId || !slugId) return;
+
+		if (server === 'jp') {
+			const data = await fetchEpisodesFromAniList(Number(animeId));
+			setEpisodes(data.episodes);
+			setNextAiring(data.nextAiringEpisode || null);
+
+			const lastEp = data.nextAiringEpisode
+				? data.nextAiringEpisode.episode - 1
+				: data.episodes[data.episodes.length - 1]?.episode || 1;
+
+			setSelectedEpisode(lastEp);
+			generateRangeOptions(data.episodes);
+			setLanguage('sub');
+		} else {
+			if (!seasonId) return;
+			const total = await getTotalEpisodes(Number(seasonId));
+			if (total === 0) return;
+
+			const epList: EpisodeType[] = Array.from({ length: total }, (_, i) => ({
+				episode: i + 1,
+				title: `Episode ${i + 1}`,
+				image: `https://img.satoru.one/thumbnail/${seasonId}/${i + 1}.jpg`, // assuming format
+			}));
+
+			setEpisodes(epList);
+			setSelectedEpisode(total);
+			generateRangeOptions(epList);
+			setLanguage('dub');
 		}
-	}, [animeId]);
+	};
+
+	useEffect(() => {
+		fetchEpisodeList(selectedServer);
+	}, [selectedServer, seasonId]);
+
+
 
 	const generateRangeOptions = (epList: EpisodeType[]) => {
 		const ranges = [];
@@ -188,23 +237,34 @@ export default function WatchAnime() {
 						darkMode={darkMode}
 					/>
 					<View className="flex-row space-x-4">
-						{['sub', 'dub'].map((lang) => (
-							<TouchableOpacity
-								key={lang}
-								onPress={() => setLanguage(lang as 'sub' | 'dub')}
-								className={`px-3 py-1 rounded-full ${language === lang ? 'bg-green-600' : darkMode ? 'bg-gray-700' : 'bg-gray-300'}`}
-							>
-								<Text className={language === lang ? 'text-white' : darkMode ? 'text-white' : 'text-black'}>
-									{lang.toUpperCase()}
-								</Text>
-							</TouchableOpacity>
-						))}
+						<Text className={darkMode ? 'text-white' : 'text-black'}>
+							Mode: <Text className="font-bold">{language.toUpperCase()}</Text>
+						</Text>
+
 					</View>
 				</View>
 
 				<Text className={`text-center mt-4 font-bold text-lg ${darkMode ? 'text-white' : 'text-black'}`}>
 					{language === 'dub' ? 'Dub Episodes' : 'Sub Episodes'}
 				</Text>
+
+				<View className="flex-row space-x-3 items-center">
+					<Text className={darkMode ? 'text-white' : 'text-black'}>Server:</Text>
+					<ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row space-x-2">
+						{['jp', 'hi', 'kan', 'mal', 'tam', 'tel', 'eng'].map((lang) => (
+							<TouchableOpacity
+								key={lang}
+								onPress={() => setSelectedServer(lang)}
+								className={`px-6 py-1 rounded-full ${selectedServer === lang ? 'bg-blue-600' : darkMode ? 'bg-gray-700' : 'bg-gray-300'}`}
+							>
+								<Text className={selectedServer === lang ? 'text-white' : darkMode ? 'text-white' : 'text-black'}>
+									{lang.toUpperCase()}
+								</Text>
+							</TouchableOpacity>
+						))}
+					</ScrollView>
+				</View>
+
 
 				<FlatList
 					data={visibleEpisodes}
